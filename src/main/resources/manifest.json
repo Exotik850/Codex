@@ -1,13 +1,11 @@
 {
-    "Group": "HytaleModding",
-    "Name": "ExamplePlugin",
-    "Version": "0.0.0",
-    "Description": "Description of your plugin",
+    "Group": "Exotik850",
+    "Name": "Codex",
+    "Version": "0.0.1",
+    "Description": "Adds a User-friendly Mod Settings GUI that can be used by any mod, and is also used by the Codex Mod itself.",
     "Authors": [
         {
-            "Name": "Your Name",
-            "Email": "your.email@example.com",
-            "Url": "https://your-website.com"
+            "Name": "Exotik850"
         }
     ],
     "Website": "https://your-plugin-website.com",
@@ -16,5 +14,5 @@
     "Dependencies": {},
     "OptionalDependencies": {},
     "ServerVersion": "*",
-    "Main": "dev.hytalemodding.ExamplePlugin"
+    "Main": "dev.byt3.codex.CodexPlugin"
 }

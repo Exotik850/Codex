@@ -1,4 +1,6 @@
-rootProject.name = "dev.hytalemodding"
+import dev.scaffoldit.hytale.wire.HytaleManifest
+
+rootProject.name = "dev.byt3.codex"
 
 plugins {
     // See documentation on https://scaffoldit.dev
@@ -21,8 +23,11 @@ hytale {
     }
 
     manifest {
-        Group = "HytaleModding"
-        Name = "ExamplePlugin"
-        Main = "dev.hytalemodding.ExamplePlugin"
+        Group = "Exotik850"
+        Name = "Codex"
+        Main = "dev.byt3.codex.CodexPlugin"
+        Description = "Adds a User-friendly Mod Settings GUI that can be used by any mod, and is also used by the Codex Mod itself."
+        Version = "0.0.1"
+        Authors = listOf(HytaleManifest.Author("Exotik850"))
     }
 }
