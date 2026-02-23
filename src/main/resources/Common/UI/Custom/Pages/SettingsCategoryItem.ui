@@ -1,0 +1,37 @@
+$Common = "../Common.ui";
+
+// Root group used to create "margin" (spacing) between list items safely
+Group {
+  Anchor: (Height: 90, Left: 0, Right: 0); // 80px button + 10px bottom gap
+  Padding: (Bottom: 10);
+
+  // The actual interactive button using Hytale's secondary button style
+  Button #CategoryButton {
+    Style: $Common.@SecondaryButtonStyle;
+    LayoutMode: Left;
+    Anchor: (Top: 0, Bottom: 0, Left: 0, Right: 0);
+    Padding: (Horizontal: 20, Vertical: 15);
+
+    // Icon container set dynamically by Java
+    Group #CategoryIcon {
+      Anchor: (Width: 50, Height: 50);
+    }
+
+    // Spacing between icon and text
+    Group #Spacer {
+      Anchor: (Width: 20);
+    }
+
+    // Mod display name
+    Label #CategoryName {
+      Style: (
+        ...$Common.@SubtitleStyle,
+        FontSize: 24,
+        VerticalAlignment: Center,
+        TextColor: $Common.@ColorDefault
+      );
+      Text: "Category Placeholder";
+      Anchor: (Top: 0, Bottom: 0, Right: 0);
+    }
+  }
+}

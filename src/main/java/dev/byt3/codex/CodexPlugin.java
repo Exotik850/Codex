@@ -3,10 +3,11 @@ package dev.byt3.codex;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+import dev.byt3.codex.commands.OpenSettingsCommand;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 public class CodexPlugin extends JavaPlugin {
-    private static HytaleLogger LOGGER = HytaleLogger.get("Codex");
+    private static final HytaleLogger LOGGER = HytaleLogger.get("Codex");
 
     public CodexPlugin(@NonNullDecl JavaPluginInit init) {
         super(init);
@@ -14,6 +15,7 @@ public class CodexPlugin extends JavaPlugin {
 
     @Override
     public void setup() {
-        LOGGER.atInfo().log("Codex plugin has been loaded! (twice)");
+        this.getCommandRegistry().registerCommand(new OpenSettingsCommand());
+        LOGGER.atInfo().log("Codex plugin has been loaded!");
     }
 }

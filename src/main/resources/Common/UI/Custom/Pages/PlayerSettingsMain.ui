@@ -1,0 +1,43 @@
+$Common = "../Common.ui";
+
+Group {
+  // 1. The native dark translucent overlay that dims the game world
+  $Common.@PageOverlay {
+    Anchor: (Top: 0, Bottom: 0, Left: 0, Right: 0);
+  }
+
+  // 2. Center the settings window on the screen
+  Group {
+    LayoutMode: Center;
+    Anchor: (Top: 0, Bottom: 0, Left: 0, Right: 0);
+
+    // 3. Utilize the native Container prefab for a standard Hytale UI window
+    $Common.@Container #MainContainer {
+      @CloseButton = true;
+      Anchor: (Width: 800, Height: 850);
+
+      #Title {
+        // Use the native title text styling
+        $Common.@Title {
+          @Text = "Player Settings";
+          @Alignment = Center;
+          Anchor: (Top: 0, Bottom: 0, Left: 0, Right: 0);
+        }
+      }
+
+      #Content {
+        // A native decorative separator right under the title
+        $Common.@PanelSeparatorFancy {
+          @Anchor = (Top: 0, Left: 0, Right: 0);
+        }
+
+        // The container where Java appends SettingsCategoryItem.ui files
+        Group #CategoryList {
+          LayoutMode: Top;
+          // Offset below the fancy separator, stretch to edges
+          Anchor: (Top: 15, Bottom: 0, Left: 0, Right: 0);
+        }
+      }
+    }
+  }
+}
