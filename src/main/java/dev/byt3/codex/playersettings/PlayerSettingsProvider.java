@@ -20,7 +20,7 @@ public interface PlayerSettingsProvider {
     String getDisplayName();
 
     /**
-     * Optional path to an icon to show in the UI. Should be a 16x16 image. Can be null to use a default icon.
+     * Optional path to an icon to show in the UI. Should be a 100x100 image. Can be null to use a default icon.
      */
     @Nullable
     default String getIconPath() {

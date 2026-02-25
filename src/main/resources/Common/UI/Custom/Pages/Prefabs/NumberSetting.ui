@@ -1,0 +1,17 @@
+$Common = "../../Common.ui";
+
+Group {
+  LayoutMode: Top;
+  Anchor: (Height: 60, Left: 0, Right: 0);
+  Padding: (Bottom: 10);
+
+  Label #SettingName {
+    Style: $Common.@DefaultLabelStyle;
+    Anchor: (Height: 22, Left: 0, Right: 0);
+    Text: "Setting Name";
+  }
+
+  $Common.@FloatSlider #NumberControl {
+    Anchor: (Top: 5, Height: 24, Left: 0, Right: 0);
+  }
+}

@@ -1,0 +1,56 @@
+$Common = "../Common.ui";
+
+Group {
+  // Dark overlay
+  $Common.@PageOverlay {
+    Anchor: (Top: 0, Bottom: 0, Left: 0, Right: 0);
+  }
+
+  Group {
+    LayoutMode: Center;
+    Anchor: (Top: 0, Bottom: 0, Left: 0, Right: 0);
+
+    // Main window
+    $Common.@Container {
+      @CloseButton = true;
+      Anchor: (Width: 600, Height: 700);
+
+      #Title {
+        $Common.@Title #TitleLabel {
+          @Text = "Configuration";
+          @Alignment = Center;
+          Anchor: (Top: 0, Bottom: 0, Left: 0, Right: 0);
+        }
+      }
+
+      #Content {
+        LayoutMode: Top;
+
+        $Common.@PanelSeparatorFancy {
+          @Anchor = (Left: 0, Right: 0);
+          Anchor: (Height: 2);
+        }
+
+        // Back button to return to the main settings list
+        Group {
+          Anchor: (Height: 50, Left: 0, Right: 0);
+          Padding: (Top: 10, Horizontal: 10);
+
+          Button #BackButton {
+            Style: $Common.@SecondaryButtonStyle;
+            Anchor: (Width: 120, Height: 36);
+            Label { Text: "← Back"; Style: (FontSize: 16, HorizontalAlignment: Center, VerticalAlignment: Center); Anchor: (Full: 0); }
+          }
+        }
+
+        // The scrollable container where Java appends setting prefabs
+        Group #SettingsList {
+          LayoutMode: TopScrolling;
+          FlexWeight: 1;
+          Anchor: (Left: 0, Right: 0);
+          Padding: (Horizontal: 20, Top: 10, Bottom: 10);
+        }
+      }
+    }
+  }
+}

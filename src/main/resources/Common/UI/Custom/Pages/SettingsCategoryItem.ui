@@ -12,9 +12,10 @@ Group {
     Anchor: (Top: 0, Bottom: 0, Left: 0, Right: 0);
     Padding: (Horizontal: 20, Vertical: 15);
 
-    // Icon container set dynamically by Java
-    Group #CategoryIcon {
+    // Icon set dynamically by Java via AssetPath
+    AssetImage #CategoryIcon {
       Anchor: (Width: 50, Height: 50);
+      AssetPath: "UI/Custom/Pages/DefaultSettingsIcon.png";
     }
 
     // Spacing between icon and text
@@ -31,7 +32,8 @@ Group {
         TextColor: $Common.@ColorDefault
       );
       Text: "Category Placeholder";
-      Anchor: (Top: 0, Bottom: 0, Right: 0);
+      FlexWeight: 1;
+      Anchor: (Top: 0, Bottom: 0);
     }
   }
 }

@@ -43,7 +43,7 @@ public class PlayerSettingsMainPage extends InteractiveCustomUIPage<PlayerSettin
             commandBuilder.append("#CategoryList", "Pages/SettingsCategoryItem.ui");
             commandBuilder.set(selector + " #CategoryName.Text", provider.getDisplayName());
 
-            if (!provider.getIconPath().isEmpty()) {
+            if (provider.getIconPath() != null && !provider.getIconPath().isEmpty()) {
                 commandBuilder.set(selector + " #CategoryIcon.AssetPath", provider.getIconPath());
             }
 
@@ -52,7 +52,6 @@ public class PlayerSettingsMainPage extends InteractiveCustomUIPage<PlayerSettin
                     CustomUIEventBindingType.Activating,
                     selector + " #CategoryButton",
                     EventData.of("Action", "OpenCategory").append("ProviderId", provider.getId())
-//                    EventData.of("ProviderId", provider.getId())
             );
         }
     }
@@ -61,14 +60,11 @@ public class PlayerSettingsMainPage extends InteractiveCustomUIPage<PlayerSettin
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull PageData data) {
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) return;
-
-        if ("OpenCategory".equals(data.action) && data.providerId != null) {
-            PlayerSettingsProvider provider = PlayerSettingsRegistry.get().getProvider(data.providerId);
-            if (provider != null) {
-                // Open the mod's specific page. It replaces the current page in the Custom UI.
-                player.getPageManager().openCustomPage(ref, store, provider.createSettingsPage(this.playerRef));
-            }
-        }
+        if (!"OpenCategory".equals(data.action) || data.providerId == null) return;
+        PlayerSettingsProvider provider = PlayerSettingsRegistry.get().getProvider(data.providerId);
+        if (provider == null) return;
+        // Open the mod's specific page. It replaces the current page in the Custom UI.
+        player.getPageManager().openCustomPage(ref, store, provider.createSettingsPage(this.playerRef));
     }
 
 

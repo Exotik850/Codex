@@ -1,0 +1,17 @@
+$Common = "../../Common.ui";
+
+Group {
+  LayoutMode: Top;
+  Anchor: (Height: 65, Left: 0, Right: 0);
+  Padding: (Bottom: 10);
+
+  Label #SettingName {
+    Style: $Common.@DefaultLabelStyle;
+    Anchor: (Height: 22, Left: 0, Right: 0);
+    Text: "Setting Name";
+  }
+
+  $Common.@TextField #InputControl {
+    Anchor: (Top: 5, Height: 30, Left: 0, Right: 0);
+  }
+}

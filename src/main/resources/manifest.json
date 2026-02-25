@@ -10,9 +10,9 @@
     ],
     "Website": "https://your-plugin-website.com",
     "DisabledByDefault": false,
-    "IncludesAssetPack": false,
+    "IncludesAssetPack": true,
     "Dependencies": {},
     "OptionalDependencies": {},
-    "ServerVersion": "*",
+    "ServerVersion": "2026.02.19-1a311a592",
     "Main": "dev.byt3.codex.CodexPlugin"
 }

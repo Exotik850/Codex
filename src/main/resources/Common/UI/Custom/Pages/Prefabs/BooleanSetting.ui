@@ -1,0 +1,22 @@
+$Common = "../../Common.ui";
+
+Group {
+  LayoutMode: Left;
+  Anchor: (Height: 45, Left: 0, Right: 0);
+  Padding: (Bottom: 10);
+
+  $Common.@CheckBox #ToggleControl {
+    Anchor: (Width: 30, Height: 30);
+  }
+
+  Label #SettingName {
+    Style: (
+      ...$Common.@DefaultLabelStyle,
+      VerticalAlignment: Center
+    );
+    FlexWeight: 1;
+    Anchor: (Top: 0, Bottom: 0);
+    Padding: (Left: 12);
+    Text: "Setting Name";
+  }
+}

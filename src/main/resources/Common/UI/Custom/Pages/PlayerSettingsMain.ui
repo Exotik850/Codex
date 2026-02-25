@@ -26,16 +26,20 @@ Group {
       }
 
       #Content {
+        LayoutMode: Top;
+
         // A native decorative separator right under the title
         $Common.@PanelSeparatorFancy {
-          @Anchor = (Top: 0, Left: 0, Right: 0);
+          @Anchor = (Left: 0, Right: 0);
+          Anchor: (Height: 2);
         }
 
         // The container where Java appends SettingsCategoryItem.ui files
         Group #CategoryList {
-          LayoutMode: Top;
-          // Offset below the fancy separator, stretch to edges
-          Anchor: (Top: 15, Bottom: 0, Left: 0, Right: 0);
+          LayoutMode: TopScrolling;
+          FlexWeight: 1;
+          Anchor: (Left: 0, Right: 0);
+          Padding: (Top: 15, Horizontal: 10);
         }
       }
     }
