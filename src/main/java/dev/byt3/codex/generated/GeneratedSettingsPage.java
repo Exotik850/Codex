@@ -4,6 +4,7 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.ExtraInfo;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.builder.BuilderField;
+import com.hypixel.hytale.codec.util.RawJsonReader;
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
@@ -24,6 +25,7 @@ import org.bson.BsonDocument;
 import org.bson.BsonValue;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +65,7 @@ public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends 
         if (currentData == null) {
             HytaleLogger.getLogger().atWarning().log("No existing component data found for ref %s, using default instance", ref);
             currentData = eventDataCodec.getSupplier().get();
+            store.addComponent(ref, componentType, currentData);
         }
         BsonDocument document = eventDataCodec.encode(currentData, threadLocalInfo);
         HytaleLogger.getLogger().atInfo().log("Encoded component data for ref %s into document: %s", ref, document.toJson());
@@ -108,6 +111,8 @@ public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends 
 
     @Override
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull String data) {
+        data = data.replaceAll("\"@", "\"");
+        HytaleLogger.getLogger().atInfo().log("Received data event for ref %s with data: %s", ref, data);
         if (data.contains("\"_GoBack\"")) {
             Player player = store.getComponent(ref, Player.getComponentType());
             if (player == null) return;
@@ -116,7 +121,15 @@ public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends 
             player.getPageManager().openCustomPage(ref, store, new PlayerSettingsMainPage(playerRef));
             return;
         }
-        super.handleDataEvent(ref, store, data);
+        ExtraInfo extraInfo = ExtraInfo.THREAD_LOCAL.get();
+        Data data1;
+        try {
+            data1 = (Data)this.eventDataCodec.originalCodec.decodeJson(new RawJsonReader(data.toCharArray()), extraInfo);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        extraInfo.getValidationResults().logOrThrowValidatorExceptions(HytaleLogger.getLogger());
+        this.handleDataEvent(ref, store, data1);
         sendUpdate();
     }
 
@@ -124,9 +137,11 @@ public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends 
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull Data data) {
         Data currentData = store.getComponent(ref, componentType);
         // use reflection to merge the two
+        ExtraInfo threadLocalInfo = ExtraInfo.THREAD_LOCAL.get();
         if (currentData != null) {
-            HytaleLogger.getLogger().atInfo().log("Merging new data with existing component data for ref %s", ref);
-            eventDataCodec.originalCodec.inherit(currentData, data, ExtraInfo.THREAD_LOCAL.get());
+            HytaleLogger.getLogger().atInfo().log("Merging data: %s", eventDataCodec.encode(data, threadLocalInfo).toJson());
+            eventDataCodec.originalCodec.inherit(data, currentData, threadLocalInfo);
+            store.putComponent(ref, componentType, data);
         } else {
             HytaleLogger.getLogger().atInfo().log("No existing component data for ref %s, using new data as is", ref);
             store.addComponent(ref, componentType, data);
