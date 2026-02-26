@@ -3,9 +3,10 @@ package dev.byt3.codex.generated;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.builder.BuilderField;
+import com.hypixel.hytale.component.Component;
+import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
@@ -20,19 +21,21 @@ import dev.byt3.codex.playersettings.PlayerSettingsMainPage;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import static com.hypixel.hytale.server.core.universe.world.WorldConfig.formatDisplayName;
 
-public class GeneratedSettingsPage<Data> extends InteractiveCustomUIPage<Data> {
+public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends InteractiveCustomUIPage<Data> {
 
     private final String displayName;
-    private final BuilderCodec<Data> eventDataCodec;
+    private final UICodecWrapper<Data> eventDataCodec;
+    private final ComponentType<EntityStore, Data> componentType;
 
-    public GeneratedSettingsPage(@Nonnull PlayerRef playerRef, @Nonnull BuilderCodec<Data> dataCodec, @Nonnull String displayName) {
+    public GeneratedSettingsPage(@Nonnull PlayerRef playerRef, @Nonnull BuilderCodec<Data> dataCodec, @Nonnull ComponentType<EntityStore, Data> componentType, @Nonnull String displayName) {
+        UICodecWrapper<Data> dataCodecWrapper = new UICodecWrapper<>(dataCodec);
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, dataCodec);
-        this.eventDataCodec = dataCodec;
+        this.eventDataCodec = dataCodecWrapper;
         this.displayName = displayName;
+        this.componentType = componentType;
     }
 
     @Override
@@ -46,10 +49,11 @@ public class GeneratedSettingsPage<Data> extends InteractiveCustomUIPage<Data> {
         uiEventBuilder.addEventBinding(
                 CustomUIEventBindingType.Activating,
                 "#BackButton",
-                EventData.of("_Action", "_GoBack")
+                EventData.of("_GoBack", "")
         );
 
         int index = 0;
+        Data currentData = store.getComponent(ref, componentType);
 
         // Iterate over the map entries returned by getEntries()
         for (Map.Entry<String, List<BuilderField<Data, ?>>> entry : eventDataCodec.getEntries().entrySet()) {
@@ -70,6 +74,9 @@ public class GeneratedSettingsPage<Data> extends InteractiveCustomUIPage<Data> {
 
             String selector = "#SettingsList[" + index + "]";
             String displayName = formatDisplayName(key);
+            if (displayName.startsWith("@")) {
+                displayName = displayName.substring(1);
+            }
 
             if (codec == Codec.STRING) {
                 uiCommandBuilder.append("#SettingsList", "Pages/Prefabs/StringSetting.ui");
@@ -108,7 +115,6 @@ public class GeneratedSettingsPage<Data> extends InteractiveCustomUIPage<Data> {
 
     @Override
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull String data) {
-        HytaleLogger.getLogger().atInfo().log("Received data event: " + data);
         if (data.contains("\"_GoBack\"")) {
             Player player = store.getComponent(ref, Player.getComponentType());
             if (player == null) return;
@@ -119,5 +125,15 @@ public class GeneratedSettingsPage<Data> extends InteractiveCustomUIPage<Data> {
         }
         super.handleDataEvent(ref, store, data);
         sendUpdate();
+    }
+
+    @Override
+    public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull Data data) {
+        Data currentData = store.getComponent(ref, componentType);
+        // use reflection to merge the two
+        if (currentData != null) {
+            eventDataCodec.merge(currentData, data);
+        }
+        store.putComponent(ref, componentType, currentData);
     }
 }

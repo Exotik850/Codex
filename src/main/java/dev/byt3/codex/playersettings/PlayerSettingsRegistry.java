@@ -1,6 +1,10 @@
 package dev.byt3.codex.playersettings;
 
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.component.Component;
+import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.byt3.codex.CodexPlugin;
 import dev.byt3.codex.generated.GeneratedSettingsPageProvider;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
@@ -29,11 +33,12 @@ public class PlayerSettingsRegistry {
         providers.put(provider.getId(), provider);
     }
 
-    public <Data> void registerCodec(@Nonnull String id, @Nonnull BuilderCodec<Data> codec) {
+    public <T extends Component<EntityStore>> void registerCodec(@Nonnull String id, @Nonnull BuilderCodec<T> codec, @Nonnull ComponentType<EntityStore, T> componentType) {
         if (providers.containsKey(id)) {
             throw new IllegalArgumentException("A provider with the ID '" + id + "' is already registered!");
         }
-        providers.put(id, new GeneratedSettingsPageProvider<>(id, codec));
+
+        providers.put(id, new GeneratedSettingsPageProvider<>(id, codec, componentType));
     }
 
     public PlayerSettingsProvider getProvider(String id) {
