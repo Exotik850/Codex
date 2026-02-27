@@ -14,7 +14,7 @@ Group {
     // 3. Utilize the native Container prefab for a standard Hytale UI window
     $Common.@Container #MainContainer {
       @CloseButton = true;
-      Anchor: (Width: 800, Height: 850);
+      Anchor: (MinWidth: 600, MaxWidth: 900, Height: 850);
 
       #Title {
         // Use the native title text styling
@@ -30,16 +30,15 @@ Group {
 
         // A native decorative separator right under the title
         $Common.@PanelSeparatorFancy {
-          @Anchor = (Left: 0, Right: 0);
-          Anchor: (Height: 2);
+          Anchor: (Left: 2, Right: 2);
         }
 
         // The container where Java appends SettingsCategoryItem.ui files
         Group #CategoryList {
           LayoutMode: TopScrolling;
           FlexWeight: 1;
-          Anchor: (Left: 0, Right: 0);
-          Padding: (Top: 15, Horizontal: 10);
+          Anchor: (Horizontal: 0);
+          Padding: (Top: 15, Left: 30, Right: 0);
         }
       }
     }

@@ -11,7 +11,7 @@ Group {
     Text: "Setting Name";
   }
 
-  $Common.@FloatSlider #NumberControl {
-    Anchor: (Top: 5, Height: 24, Left: 0, Right: 0);
+  $Common.@NumberField #NumberControl {
+    Anchor: (Top: 5, Height: 24, MinWidth: 100, MaxWidth: 500);
   }
 }

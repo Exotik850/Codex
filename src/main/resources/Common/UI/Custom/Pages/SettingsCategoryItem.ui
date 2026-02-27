@@ -33,7 +33,7 @@ Group {
       );
       Text: "Category Placeholder";
       FlexWeight: 1;
-      Anchor: (Top: 0, Bottom: 0);
+      Anchor: (Top: 0, Bottom: 0, Right: 0);
     }
   }
 }
