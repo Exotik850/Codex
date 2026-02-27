@@ -21,6 +21,10 @@ public class GeneratedSettingsRegistry {
     private record TypedEntry<T>(Codec<T> codec, CodecUIProvider<T> provider) {
     }
 
+    public static <T> void put(@Nonnull Codec<T> codec, @Nonnull CodecUIProvider<T> provider) {
+        CODECS.put(codec, new TypedEntry<>(codec, provider));
+    }
+
     public static <T> void register(@Nonnull Codec<T> codec, @Nonnull CodecUIProvider<T> provider) {
         if (CODECS.containsKey(codec)) {
             throw new IllegalArgumentException("Codec already registered: " + codec);

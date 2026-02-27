@@ -32,10 +32,6 @@ public class PlayerSettingsRegistry {
         providers.put(provider.getId(), provider);
     }
 
-    public <T extends Component<EntityStore>> void putCodecProvider(@Nonnull String id, @Nonnull Supplier<BuilderCodec<T>> codecSupplier, @Nonnull ComponentType<EntityStore, T> componentType) {
-        registerCodec(id, codecSupplier.get(), componentType, true);
-    }
-
     public <T extends Component<EntityStore>> void registerCodec(@Nonnull String id, @Nonnull BuilderCodec<T> codec, @Nonnull ComponentType<EntityStore, T> componentType, boolean overwrite) {
         if (providers.containsKey(id) && !overwrite) {
             throw new IllegalArgumentException("A provider with the ID '" + id + "' is already registered!");
