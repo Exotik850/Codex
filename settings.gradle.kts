@@ -1,6 +1,6 @@
 import dev.scaffoldit.hytale.wire.HytaleManifest
 
-rootProject.name = "dev.byt3.codex"
+rootProject.name = "Codex"
 
 plugins {
     // See documentation on https://scaffoldit.dev
