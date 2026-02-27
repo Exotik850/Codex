@@ -2,6 +2,7 @@ package dev.byt3.codex.commands;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.protocol.GameMode;
 import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
@@ -21,6 +22,7 @@ public class OpenSettingsCommand extends AbstractPlayerCommand {
     public OpenSettingsCommand() {
         super("settings", "Open the Codex settings menu");
         this.addAliases("codexsettings", "codexconfig", "config");
+        this.setPermissionGroup(GameMode.Adventure);
     }
 
     @Override
