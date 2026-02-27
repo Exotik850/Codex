@@ -4,7 +4,6 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.byt3.codex.CodexPlugin;
 import dev.byt3.codex.generated.GeneratedSettingsPageProvider;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
@@ -33,12 +32,19 @@ public class PlayerSettingsRegistry {
         providers.put(provider.getId(), provider);
     }
 
-    public <T extends Component<EntityStore>> void registerCodec(@Nonnull String id, @Nonnull BuilderCodec<T> codec, @Nonnull ComponentType<EntityStore, T> componentType) {
-        if (providers.containsKey(id)) {
+    public <T extends Component<EntityStore>> void putCodecProvider(@Nonnull String id, @Nonnull Supplier<BuilderCodec<T>> codecSupplier, @Nonnull ComponentType<EntityStore, T> componentType) {
+        registerCodec(id, codecSupplier.get(), componentType, true);
+    }
+
+    public <T extends Component<EntityStore>> void registerCodec(@Nonnull String id, @Nonnull BuilderCodec<T> codec, @Nonnull ComponentType<EntityStore, T> componentType, boolean overwrite) {
+        if (providers.containsKey(id) && !overwrite) {
             throw new IllegalArgumentException("A provider with the ID '" + id + "' is already registered!");
         }
-
         providers.put(id, new GeneratedSettingsPageProvider<>(id, codec, componentType));
+    }
+
+    public <T extends Component<EntityStore>> void registerCodec(@Nonnull String id, @Nonnull BuilderCodec<T> codec, @Nonnull ComponentType<EntityStore, T> componentType) {
+        registerCodec(id, codec, componentType, false);
     }
 
     public PlayerSettingsProvider getProvider(String id) {
