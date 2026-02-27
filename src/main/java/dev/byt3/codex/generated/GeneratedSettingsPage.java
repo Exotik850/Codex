@@ -11,6 +11,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.Anchor;
@@ -50,6 +51,8 @@ public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends 
     public void build(@Nonnull Ref<EntityStore> ref, @Nonnull UICommandBuilder uiCommandBuilder, @Nonnull UIEventBuilder uiEventBuilder, @Nonnull Store<EntityStore> store) {
         uiCommandBuilder.append("Pages/GeneratedSettings.ui");
         uiCommandBuilder.set("#TitleLabel.Text", displayName);
+
+        uiEventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#CloseButton", EventData.of("_Close", ""));
 
         HubConfigData hubConfig = store.getComponent(ref, HubConfigData.getComponentType());
         int windowWidth = hubConfig != null ? hubConfig.getWindowWidth() : HubConfigData.DEFAULT_WINDOW_WIDTH;
@@ -134,12 +137,16 @@ public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends 
 
     @Override
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull String data) {
+        Player player = store.getComponent(ref, Player.getComponentType());
+        if (player == null) return;
+        PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
+        if (playerRef == null) return;
         if (data.contains("\"_GoBack\"")) {
-            Player player = store.getComponent(ref, Player.getComponentType());
-            if (player == null) return;
-            PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
-            if (playerRef == null) return;
             player.getPageManager().openCustomPage(ref, store, new PlayerSettingsMainPage(playerRef));
+            return;
+        }
+        if (data.contains("\"_Close\"")) {
+            player.getPageManager().setPage(ref, store, Page.None);
             return;
         }
 

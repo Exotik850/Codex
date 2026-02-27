@@ -7,6 +7,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
@@ -31,6 +32,8 @@ public class PlayerSettingsMainPage extends InteractiveCustomUIPage<PlayerSettin
         if (playerComponent == null) return;
 
         commandBuilder.append("Pages/PlayerSettingsMain.ui");
+
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#CloseButton", EventData.of("Action", "ClosePage"));
 
         List<PlayerSettingsProvider> providers = new ArrayList<>(PlayerSettingsRegistry.get().getProviders());
 
@@ -57,6 +60,10 @@ public class PlayerSettingsMainPage extends InteractiveCustomUIPage<PlayerSettin
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull PageData data) {
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) return;
+        if ("ClosePage".equals(data.action)) {
+            player.getPageManager().setPage(ref, store, Page.None);
+            return;
+        }
         if (!"OpenCategory".equals(data.action) || data.providerId == null) return;
         PlayerSettingsProvider provider = PlayerSettingsRegistry.get().getProvider(data.providerId);
         if (provider == null) return;
