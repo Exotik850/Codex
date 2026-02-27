@@ -1,17 +1,25 @@
 $Common = "../../Common.ui";
 
 Group {
-  LayoutMode: Top;
-  Anchor: (Height: 60, Left: 0, Right: 0);
-  Padding: (Bottom: 10);
+  Anchor: (Left: 0, Right: 0);
+  Padding: (Bottom: 6);
 
-  Label #SettingName {
-    Style: $Common.@DefaultLabelStyle;
-    Anchor: (Height: 22, Left: 0, Right: 0);
-    Text: "Setting Name";
-  }
+  Group {
+    LayoutMode: Top;
+    Anchor: (Left: 0, Right: 0);
+    Background: $Common.@InputBoxBackground;
+    OutlineColor: #93844c(0.3);
+    OutlineSize: 1;
+    Padding: (Left: 12, Right: 12, Top: 8, Bottom: 10);
 
-  $Common.@NumberField #NumberControl {
-    Anchor: (Top: 5, Height: 24, MinWidth: 100, MaxWidth: 500);
+    Label #SettingName {
+      Style: (FontSize: 14, RenderBold: true, TextColor: #93844c, RenderUppercase: true);
+      Anchor: (Left: 0, Right: 0);
+      Text: "Setting Name";
+    }
+
+    $Common.@NumberField #NumberControl {
+      Anchor: (Top: 6, Height: 30, Left: 0, Right: 0);
+    }
   }
 }

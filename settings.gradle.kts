@@ -27,7 +27,7 @@ hytale {
         Name = "Codex"
         Main = "dev.byt3.codex.CodexPlugin"
         Description = "Adds a User-friendly Mod Settings GUI that can be used by any mod, and is also used by the Codex Mod itself."
-        Version = "0.0.1"
+        Version = "0.0.2"
         Authors = listOf(HytaleManifest.Author("Exotik850"))
         ServerVersion = "2026.02.19-1a311a592"
         IncludesAssetPack = true

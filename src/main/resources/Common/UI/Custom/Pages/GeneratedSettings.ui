@@ -16,31 +16,41 @@ Group {
       Anchor: (Width: 600, Height: 700);
 
       #Title {
-        $Common.@Title #TitleLabel {
-          @Text = "Configuration";
-          @Alignment = Center;
-          Anchor: (Top: 0, Bottom: 0, Left: 0, Right: 0);
+        Group {
+          TextButton #BackButton {
+            Anchor: (Left: 12, Top: 4, Width: 70, Height: 24);
+            Padding: (Left: 8, Top: 2);
+            Text: "< Back";
+            Style: TextButtonStyle(
+              Default: (LabelStyle: (FontSize: 14, TextColor: #93844c, RenderBold: true)),
+              Sounds: $Common.@ButtonSounds,
+            );
+            Background: #000000(0.13);
+          }
+
+          $Common.@Title #TitleLabel {
+            @Text = "Configuration";
+            @Alignment = Center;
+            Anchor: (Top: 0, Bottom: 0, Left: 0, Right: 0);
+          }
         }
       }
 
       #Content {
         LayoutMode: Top;
 
-        $Common.@PanelSeparatorFancy {
-          @Anchor = (Left: 0, Right: 0);
-          Anchor: (Height: 2);
+        // Gold separator
+        Group #TitleSeparator {
+          Anchor: (Left: 12, Right: 12, Bottom: 8);
+          OutlineColor: #93844c;
+          OutlineSize: 0.5;
         }
 
-        // Back button to return to the main settings list
-        Group {
-          Anchor: (Height: 50, Left: 0, Right: 0);
-          Padding: (Top: 10, Horizontal: 10);
-
-          Button #BackButton {
-            Style: $Common.@SecondaryButtonStyle;
-            Anchor: (Width: 120, Height: 36);
-            Label { Text: "Back"; Style: (FontSize: 16, HorizontalAlignment: Center, VerticalAlignment: Center); Anchor: (Full: 0); }
-          }
+        // Section label
+        Label {
+          Anchor: (Left: 14, Bottom: 6);
+          Style: (FontSize: 14, TextColor: #93844c, RenderBold: true, RenderUppercase: true);
+          Text: "Settings";
         }
 
         // The scrollable container where Java appends setting prefabs
@@ -49,6 +59,7 @@ Group {
           FlexWeight: 1;
           Anchor: (Left: 0, Right: 0);
           Padding: (Horizontal: 20, Top: 10, Bottom: 10);
+          ScrollbarStyle: $Common.@DefaultScrollbarStyle;
         }
       }
     }

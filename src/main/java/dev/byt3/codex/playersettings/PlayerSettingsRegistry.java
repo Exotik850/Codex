@@ -8,6 +8,7 @@ import dev.byt3.codex.generated.GeneratedSettingsPageProvider;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -42,8 +43,8 @@ public class PlayerSettingsRegistry {
     }
 
     /// Convenience overload — equivalent to {@code registerCodec(id, codec, componentType, false)}.
-    public <T extends Component<EntityStore>> void registerCodec(@Nonnull String id, @Nonnull BuilderCodec<T> codec, @Nonnull ComponentType<EntityStore, T> componentType) {
-        registerCodec(id, codec, componentType, false);
+    public <T extends Component<EntityStore>> void registerCodec(@Nonnull String id, @Nonnull BuilderCodec<T> codec, @Nonnull ComponentType<EntityStore, T> componentType, @Nullable String description, boolean b) {
+        registerCodec(id, codec, componentType, description, false);
     }
 
     /// Returns the provider registered under {@code id}, or {@code null} if none exists.

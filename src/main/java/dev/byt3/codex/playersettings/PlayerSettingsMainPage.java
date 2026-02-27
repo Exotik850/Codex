@@ -48,6 +48,10 @@ public class PlayerSettingsMainPage extends InteractiveCustomUIPage<PlayerSettin
                 commandBuilder.set(selector + " #CategoryIcon.AssetPath", provider.getIconPath());
             }
 
+            if (provider.getDescription() != null && !provider.getDescription().isEmpty()) {
+                commandBuilder.appendInline(selector + " #CategoryInfo", "Label #CategoryDescription { Style: (FontSize: 12, TextColor: #ffffff(0.4)); Text: \"%s\";}".formatted(provider.getDescription()));
+            }
+
             eventBuilder.addEventBinding(
                     CustomUIEventBindingType.Activating,
                     selector + " #CategoryButton",

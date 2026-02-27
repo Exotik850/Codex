@@ -7,10 +7,14 @@ Group {
 
   // The actual interactive button using Hytale's secondary button style
   Button #CategoryButton {
-    Style: $Common.@SecondaryButtonStyle;
     LayoutMode: Left;
     Anchor: (Top: 0, Bottom: 0, Left: 0, Right: 0);
-    Padding: (Horizontal: 20, Vertical: 15);
+    Padding: (Left: 14, Right: 14, Vertical: 10);
+    Background: $Common.@InputBoxBackground;
+    OutlineColor: #93844c(0.0);
+    OutlineSize: 1.5;
+    Style: $Common.@SecondaryButtonStyle;
+
 
     // Icon set dynamically by Java via AssetPath
     AssetImage #CategoryIcon {
@@ -23,17 +27,28 @@ Group {
       Anchor: (Width: 20);
     }
 
-    // Mod display name
-    Label #CategoryName {
-      Style: (
-        ...$Common.@SubtitleStyle,
-        FontSize: 24,
-        VerticalAlignment: Center,
-        TextColor: $Common.@ColorDefault
-      );
-      Text: "Category Placeholder";
+    Group #CategoryInfo {
+      LayoutMode: Top;
       FlexWeight: 1;
       Anchor: (Top: 0, Bottom: 0, Right: 0);
+      // Mod display name
+      Label #CategoryName {
+        Style: (
+          ...$Common.@SubtitleStyle,
+          FontSize: 24,
+          VerticalAlignment: Center,
+          TextColor: #ffffff
+        );
+        Text: "Category Placeholder";
+        Padding: (Bottom: 5);
+      }
     }
+
+    // Right-arrow caret
+    Group #CaretIcon {
+      Background: "../Common/DropdownPressedCaret.png";
+      Anchor: (Width: 28, Height: 4, Right: 4, Vertical: 0);
+    }
+
   }
 }

@@ -2,21 +2,28 @@ $Common = "../../Common.ui";
 
 Group {
   LayoutMode: Left;
-  Anchor: (Height: 45, Left: 0, Right: 0);
-  Padding: (Bottom: 10);
+  Anchor: (Left: 0, Right: 0);
+  Padding: (Bottom: 6);
 
-  $Common.@CheckBox #ToggleControl {
-    Anchor: (Width: 30, Height: 30);
+  Group {
+    LayoutMode: Left;
+    Anchor: (Height: 50, Left: 0, Right: 0);
+    Background: $Common.@InputBoxBackground;
+    OutlineColor: #93844c(0.3);
+    OutlineSize: 1;
+    Padding: (Left: 12, Right: 12, Vertical: 10);
+
+    $Common.@CheckBox #ToggleControl {
+      Anchor: (Width: 30, Height: 30, Vertical: 0, Right: 0);
+    }
+
+    Label #SettingName {
+      Style: (FontSize: 16, RenderBold: true, TextColor: #ffffff, VerticalAlignment: Center);
+      FlexWeight: 1;
+      Anchor: (Top: 0, Bottom: 0);
+      Padding: (Left: 8);
+      Text: "Setting Name";
+    }
   }
 
-  Label #SettingName {
-    Style: (
-      ...$Common.@DefaultLabelStyle,
-      VerticalAlignment: Center
-    );
-    FlexWeight: 1;
-    Anchor: (Top: 0, Bottom: 0);
-    Padding: (Left: 12);
-    Text: "Setting Name";
-  }
 }

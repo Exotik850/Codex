@@ -12,7 +12,7 @@ Group {
     Anchor: (Top: 0, Bottom: 0, Left: 0, Right: 0);
 
     // 3. Utilize the native Container prefab for a standard Hytale UI window
-    $Common.@Container #MainContainer {
+    $Common.@DecoratedContainer #MainContainer {
       @CloseButton = true;
       Anchor: (MinWidth: 600, MaxWidth: 900, Height: 850);
 
@@ -39,6 +39,7 @@ Group {
           FlexWeight: 1;
           Anchor: (Horizontal: 0);
           Padding: (Top: 15, Left: 30, Right: 0);
+          ScrollbarStyle: $Common.@DefaultScrollbarStyle;
         }
       }
     }

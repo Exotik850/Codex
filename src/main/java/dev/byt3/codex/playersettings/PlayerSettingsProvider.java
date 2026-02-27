@@ -22,6 +22,12 @@ public interface PlayerSettingsProvider {
         return null;
     }
 
+    ///  Optional description shown below the category name in smaller text. Return null for no description.
+    @Nullable
+    default String getDescription() {
+        return null;
+    }
+
     /// Creates the UI page to display when the player selects this category.
     @Nonnull
     InteractiveCustomUIPage<?> createSettingsPage(@Nonnull PlayerRef playerRef);
