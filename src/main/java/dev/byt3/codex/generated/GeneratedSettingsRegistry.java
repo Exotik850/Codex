@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
+/// Maps {@link Codec} instances to the {@link CodecUIProvider} that renders them. Pre-loaded with providers for String, Boolean, and numeric types.
 public class GeneratedSettingsRegistry {
 
     private static final Map<Codec<?>, TypedEntry<?>> CODECS = new Object2ObjectOpenHashMap<>();
@@ -21,10 +22,12 @@ public class GeneratedSettingsRegistry {
     private record TypedEntry<T>(Codec<T> codec, CodecUIProvider<T> provider) {
     }
 
+    /// Registers (or overwrites) a UI provider for the given codec.
     public static <T> void put(@Nonnull Codec<T> codec, @Nonnull CodecUIProvider<T> provider) {
         CODECS.put(codec, new TypedEntry<>(codec, provider));
     }
 
+    /// Registers a UI provider for the given codec. Throws if the codec is already registered — use {@link #put} to overwrite.
     public static <T> void register(@Nonnull Codec<T> codec, @Nonnull CodecUIProvider<T> provider) {
         if (CODECS.containsKey(codec)) {
             throw new IllegalArgumentException("Codec already registered: " + codec);
@@ -32,6 +35,7 @@ public class GeneratedSettingsRegistry {
         CODECS.put(codec, new TypedEntry<>(codec, provider));
     }
 
+    /// Returns the provider for {@code codec}, or {@code null} if none is registered.
     @Nullable
     public static <T> CodecUIProvider<T> get(@Nonnull Codec<T> codec) {
         TypedEntry<?> entry = CODECS.get(codec);

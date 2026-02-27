@@ -13,6 +13,7 @@ import org.bson.BsonValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/// Renders a {@link Codec#STRING} field as a text input.
 public class StringCodecUIProvider implements CodecUIProvider<String> {
 
     @Override

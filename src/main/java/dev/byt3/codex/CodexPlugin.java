@@ -10,9 +10,11 @@ import dev.byt3.codex.hubsettings.HubConfigData;
 import dev.byt3.codex.playersettings.PlayerSettingsRegistry;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
+/// Entry point for the Codex mod. Registers the /settings command, built-in hub config, and wires them into the settings registry.
 public class CodexPlugin extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.get("Codex");
 
+    // Stored statically so HubConfigData can look itself up without a plugin reference.
     public static ComponentType<EntityStore, HubConfigData> hcComponentType;
 
     public CodexPlugin(@NonNullDecl JavaPluginInit init) {

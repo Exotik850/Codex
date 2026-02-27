@@ -2,7 +2,6 @@ package dev.byt3.codex.commands;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
@@ -16,6 +15,7 @@ import dev.byt3.codex.playersettings.PlayerSettingsMainPage;
 
 import javax.annotation.Nonnull;
 
+/// Toggles the Codex settings menu open/closed. Registered as /settings (aliases: /codexsettings, /codexconfig, /config).
 public class OpenSettingsCommand extends AbstractPlayerCommand {
 
     public OpenSettingsCommand() {

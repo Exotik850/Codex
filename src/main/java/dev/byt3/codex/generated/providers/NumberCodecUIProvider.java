@@ -12,6 +12,7 @@ import org.bson.BsonValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/// Renders {@link Codec#INTEGER}, {@link Codec#FLOAT}, and {@link Codec#DOUBLE} fields as a number input.
 public class NumberCodecUIProvider implements CodecUIProvider<Number> {
 
     @Override

@@ -31,6 +31,7 @@ import java.util.Map;
 
 import static com.hypixel.hytale.server.core.universe.world.WorldConfig.formatDisplayName;
 
+/// Auto-generated settings page that introspects a {@link BuilderCodec} and renders a UI control for each field using the {@link GeneratedSettingsRegistry}.
 public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends InteractiveCustomUIPage<Data> {
 
     private final String displayName;
@@ -172,6 +173,7 @@ public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends 
     }
 
 
+    // Wraps the original codec so that all keys are prefixed with '@' for UI event binding.
     private static class UICodecWrapper<T> extends BuilderCodec<T> {
         private final BuilderCodec<T> originalCodec;
 

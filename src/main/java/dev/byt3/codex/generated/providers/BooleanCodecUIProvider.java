@@ -12,6 +12,7 @@ import org.bson.BsonValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/// Renders a {@link Codec#BOOLEAN} field as a checkbox toggle.
 public class BooleanCodecUIProvider implements CodecUIProvider<Boolean> {
 
     @Override

@@ -11,8 +11,8 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.function.Supplier;
 
+/// Central registry of all settings categories that appear in the Codex menu. Singleton — access via {@link #get()}.
 public class PlayerSettingsRegistry {
     private static final PlayerSettingsRegistry INSTANCE = new PlayerSettingsRegistry();
 
@@ -25,6 +25,7 @@ public class PlayerSettingsRegistry {
         return INSTANCE;
     }
 
+    /// Registers a fully custom settings provider. Throws if a provider with the same ID already exists.
     public void registerProvider(PlayerSettingsProvider provider) {
         if (providers.containsKey(provider.getId())) {
             throw new IllegalArgumentException("A provider with the ID '" + provider.getId() + "' is already registered!");
@@ -32,6 +33,7 @@ public class PlayerSettingsRegistry {
         providers.put(provider.getId(), provider);
     }
 
+    /// Auto-generates a settings page from a BuilderCodec. Set {@code overwrite} to replace an existing provider.
     public <T extends Component<EntityStore>> void registerCodec(@Nonnull String id, @Nonnull BuilderCodec<T> codec, @Nonnull ComponentType<EntityStore, T> componentType, boolean overwrite) {
         if (providers.containsKey(id) && !overwrite) {
             throw new IllegalArgumentException("A provider with the ID '" + id + "' is already registered!");
@@ -39,10 +41,12 @@ public class PlayerSettingsRegistry {
         providers.put(id, new GeneratedSettingsPageProvider<>(id, codec, componentType));
     }
 
+    /// Convenience overload — equivalent to {@code registerCodec(id, codec, componentType, false)}.
     public <T extends Component<EntityStore>> void registerCodec(@Nonnull String id, @Nonnull BuilderCodec<T> codec, @Nonnull ComponentType<EntityStore, T> componentType) {
         registerCodec(id, codec, componentType, false);
     }
 
+    /// Returns the provider registered under {@code id}, or {@code null} if none exists.
     public PlayerSettingsProvider getProvider(String id) {
         return providers.get(id);
     }

@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+/// Top-level settings page that lists all registered {@link PlayerSettingsProvider} categories as clickable buttons.
 public class PlayerSettingsMainPage extends InteractiveCustomUIPage<PlayerSettingsMainPage.PageData> {
     public PlayerSettingsMainPage(@Nonnull PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, PageData.CODEC);
@@ -29,17 +30,14 @@ public class PlayerSettingsMainPage extends InteractiveCustomUIPage<PlayerSettin
         Player playerComponent = store.getComponent(ref, Player.getComponentType());
         if (playerComponent == null) return;
 
-        // Path to your main layout HTML/UI file
         commandBuilder.append("Pages/PlayerSettingsMain.ui");
 
         List<PlayerSettingsProvider> providers = new ArrayList<>(PlayerSettingsRegistry.get().getProviders());
 
-        // Build the list of categories dynamically
         for (int i = 0; i < providers.size(); i++) {
             PlayerSettingsProvider provider = providers.get(i);
             String selector = "#CategoryList[" + i + "]";
 
-            // Assuming your ui file has a list named CategoryList and a prefab named SettingsCategoryItem.ui
             commandBuilder.append("#CategoryList", "Pages/SettingsCategoryItem.ui");
             commandBuilder.set(selector + " #CategoryName.Text", provider.getDisplayName());
 
@@ -47,7 +45,6 @@ public class PlayerSettingsMainPage extends InteractiveCustomUIPage<PlayerSettin
                 commandBuilder.set(selector + " #CategoryIcon.AssetPath", provider.getIconPath());
             }
 
-            // Bind click event to open the specific module's page
             eventBuilder.addEventBinding(
                     CustomUIEventBindingType.Activating,
                     selector + " #CategoryButton",
@@ -63,7 +60,6 @@ public class PlayerSettingsMainPage extends InteractiveCustomUIPage<PlayerSettin
         if (!"OpenCategory".equals(data.action) || data.providerId == null) return;
         PlayerSettingsProvider provider = PlayerSettingsRegistry.get().getProvider(data.providerId);
         if (provider == null) return;
-        // Open the mod's specific page. It replaces the current page in the Custom UI.
         player.getPageManager().openCustomPage(ref, store, provider.createSettingsPage(this.playerRef));
     }
 

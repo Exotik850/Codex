@@ -9,10 +9,10 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.byt3.codex.playersettings.PlayerSettingsProvider;
 
 import javax.annotation.Nonnull;
-import java.util.function.Supplier;
 
 import static com.hypixel.hytale.server.core.universe.world.WorldConfig.formatDisplayName;
 
+/// Default {@link PlayerSettingsProvider} created by {@code PlayerSettingsRegistry.registerCodec}. Delegates page creation to {@link GeneratedSettingsPage}.
 public class GeneratedSettingsPageProvider<Data extends Component<EntityStore>> implements PlayerSettingsProvider {
 
     @Nonnull

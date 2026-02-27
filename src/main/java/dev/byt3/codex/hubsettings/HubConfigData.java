@@ -10,6 +10,7 @@ import dev.byt3.codex.CodexPlugin;
 
 import javax.annotation.Nullable;
 
+/// Built-in Codex settings that control the appearance of generated settings pages (window size, compact mode, etc.).
 public class HubConfigData implements Component<EntityStore> {
     public Integer windowWidth;
     public Integer windowHeight;
