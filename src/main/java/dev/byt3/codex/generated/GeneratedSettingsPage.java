@@ -4,7 +4,6 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.ExtraInfo;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.builder.BuilderField;
-import com.hypixel.hytale.codec.util.RawJsonReader;
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
@@ -14,18 +13,19 @@ import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.ui.Anchor;
+import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.byt3.codex.hubsettings.HubConfigData;
 import dev.byt3.codex.playersettings.PlayerSettingsMainPage;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -48,16 +48,35 @@ public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends 
     @Override
     public void build(@Nonnull Ref<EntityStore> ref, @Nonnull UICommandBuilder uiCommandBuilder, @Nonnull UIEventBuilder uiEventBuilder, @Nonnull Store<EntityStore> store) {
         uiCommandBuilder.append("Pages/GeneratedSettings.ui");
-
-        // Set the page title to the provider's display name
         uiCommandBuilder.set("#TitleLabel.Text", displayName);
 
-        // Bind the back button to navigate back to the main settings page
-        uiEventBuilder.addEventBinding(
-                CustomUIEventBindingType.Activating,
-                "#BackButton",
-                EventData.of("_GoBack", "")
-        );
+        HubConfigData hubConfig = store.getComponent(ref, HubConfigData.getComponentType());
+        int windowWidth = hubConfig != null ? hubConfig.getWindowWidth() : HubConfigData.DEFAULT_WINDOW_WIDTH;
+        int windowHeight = hubConfig != null ? hubConfig.getWindowHeight() : HubConfigData.DEFAULT_WINDOW_HEIGHT;
+        boolean showBack = hubConfig == null || hubConfig.isShowBackButton();
+        boolean compact = hubConfig != null && hubConfig.isCompactMode();
+
+        Anchor anchor = new Anchor();
+        anchor.setWidth(Value.of(windowWidth));
+        anchor.setHeight(Value.of(windowHeight));
+        uiCommandBuilder.setObject("#MainContainer.Anchor", anchor);
+
+        if (showBack) {
+            uiEventBuilder.addEventBinding(
+                    CustomUIEventBindingType.Activating,
+                    "#BackButton",
+                    EventData.of("_GoBack", "")
+            );
+        } else {
+            uiCommandBuilder.set("#BackButton.Visible", false);
+        }
+
+        if (compact) {
+            Anchor padding = new Anchor();
+            padding.setHorizontal(Value.of(10));
+            padding.setVertical(Value.of(6));
+            uiCommandBuilder.setObject("#SettingsList.Padding", padding);
+        }
 
         int index = 0;
         ExtraInfo threadLocalInfo = ExtraInfo.THREAD_LOCAL.get();
@@ -72,37 +91,40 @@ public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends 
 
         Map<String, List<BuilderField<Data, ?>>> entries = eventDataCodec.getEntries();
 
-        // Iterate over the map entries returned by getEntries()
         for (Map.Entry<String, List<BuilderField<Data, ?>>> entry : entries.entrySet()) {
             String key = entry.getKey();
             List<BuilderField<Data, ?>> fields = entry.getValue();
 
-            // Safety check to ensure the field list isn't empty
             if (fields == null || fields.isEmpty()) {
                 continue;
             }
 
-            // Grab the primary codec for this field to determine its UI type
             BuilderField<Data, ?> firstField = fields.getFirst();
             if (firstField == null) {
                 continue;
             }
             Codec<?> codec = firstField.getCodec().getChildCodec();
 
-            String displayName = formatDisplayName(key);
-            if (displayName.startsWith("@")) {
-                displayName = displayName.substring(1);
-            }
+            String valueKey = key.startsWith("@") ? key.substring(1) : key;
+            String displayName = formatDisplayName(valueKey);
 
-            BsonValue value = document.get(key);
+            BsonValue value = document.get(valueKey);
 
             if (value == null) {
-                HytaleLogger.getLogger().atInfo().log("No value found in document for field '%s'", key);
+                HytaleLogger.getLogger().atInfo().log("No value found in document for field '%s'", valueKey);
             }
 
             CodecUIProvider<?> provider = GeneratedSettingsRegistry.get(codec);
             if (provider != null) {
                 provider.buildCodec(uiCommandBuilder, uiEventBuilder, index, displayName, key, value);
+                if (compact) {
+                    String selector = "#SettingsList[" + index + "]";
+                    Anchor itemPadding = new Anchor();
+                    itemPadding.setHorizontal(Value.of(10));
+                    itemPadding.setTop(Value.of(4));
+                    uiCommandBuilder.setObject(selector + ".Padding", itemPadding);
+
+                }
             }
 
             index++;
@@ -111,8 +133,6 @@ public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends 
 
     @Override
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull String data) {
-        data = data.replaceAll("\"@", "\"");
-        HytaleLogger.getLogger().atInfo().log("Received data event for ref %s with data: %s", ref, data);
         if (data.contains("\"_GoBack\"")) {
             Player player = store.getComponent(ref, Player.getComponentType());
             if (player == null) return;
@@ -121,34 +141,36 @@ public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends 
             player.getPageManager().openCustomPage(ref, store, new PlayerSettingsMainPage(playerRef));
             return;
         }
-        ExtraInfo extraInfo = ExtraInfo.THREAD_LOCAL.get();
-        Data data1;
-        try {
-            data1 = (Data)this.eventDataCodec.originalCodec.decodeJson(new RawJsonReader(data.toCharArray()), extraInfo);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        extraInfo.getValidationResults().logOrThrowValidatorExceptions(HytaleLogger.getLogger());
-        this.handleDataEvent(ref, store, data1);
-        sendUpdate();
-    }
 
-    @Override
-    public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull Data data) {
         Data currentData = store.getComponent(ref, componentType);
-        // use reflection to merge the two
-        ExtraInfo threadLocalInfo = ExtraInfo.THREAD_LOCAL.get();
-        if (currentData != null) {
-            HytaleLogger.getLogger().atInfo().log("Merging data: %s", eventDataCodec.encode(data, threadLocalInfo).toJson());
-            eventDataCodec.originalCodec.inherit(data, currentData, threadLocalInfo);
-            store.putComponent(ref, componentType, data);
-        } else {
-            HytaleLogger.getLogger().atInfo().log("No existing component data for ref %s, using new data as is", ref);
-            store.addComponent(ref, componentType, data);
+        if (currentData == null) {
+            currentData = eventDataCodec.getSupplier().get();
+            store.addComponent(ref, componentType, currentData);
+        }
+
+        try {
+            BsonDocument incomingDoc = BsonDocument.parse(data.replaceAll("\"@", "\""));
+            ExtraInfo threadLocalInfo = ExtraInfo.THREAD_LOCAL.get();
+
+            boolean dirty = false;
+            // TODO : There's got to be a better way to do this
+            BsonDocument filteredDoc = eventDataCodec.originalCodec.encode(currentData, threadLocalInfo);
+            for (Map.Entry<String, BsonValue> entry : incomingDoc.entrySet()) {
+                if (entry.getValue() != null && !entry.getValue().isNull()) {
+                    filteredDoc.put(entry.getKey(), entry.getValue());
+                    dirty = true;
+                }
+            }
+
+            if (dirty) {
+                eventDataCodec.originalCodec.decode(filteredDoc, currentData, threadLocalInfo);
+            }
+            sendUpdate();
+        } catch (Exception e) {
+            HytaleLogger.getLogger().atWarning().withCause(e).log("Failed to sparsely decode UI data update for ref %s: %s", ref, data);
         }
     }
 
-    // Make sure that all the fields in the codec start with '@' so that they are included in the UI mapping
 
     private static class UICodecWrapper<T> extends BuilderCodec<T> {
         private final BuilderCodec<T> originalCodec;
@@ -165,7 +187,10 @@ public class GeneratedSettingsPage<Data extends Component<EntityStore>> extends 
             this.documentation(originalCodec.getDocumentation())
                     .codecVersion(originalCodec.getCodecVersion());
             originalCodec.getEntries().forEach((key, fields) -> {
-                String uiKey = "@" + key; // Prepend '@' to the key for UI mapping
+                if (key.startsWith("@")) {
+                    throw new IllegalArgumentException("Codec keys cannot start with '@' as it is reserved for UI field mapping. Invalid key: " + key);
+                }
+                String uiKey = "@" + key;
                 entries.put(uiKey, fields);
             });
         }

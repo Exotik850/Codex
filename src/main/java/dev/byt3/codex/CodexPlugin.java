@@ -13,6 +13,8 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 public class CodexPlugin extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.get("Codex");
 
+    public static ComponentType<EntityStore, HubConfigData> hcComponentType;
+
     public CodexPlugin(@NonNullDecl JavaPluginInit init) {
         super(init);
     }
@@ -20,7 +22,7 @@ public class CodexPlugin extends JavaPlugin {
     @Override
     public void setup() {
         this.getCommandRegistry().registerCommand(new OpenSettingsCommand());
-        ComponentType<EntityStore, HubConfigData> hcComponentType = this.getEntityStoreRegistry().registerComponent(HubConfigData.class, "HubConfigData", HubConfigData.CODEC);
+        hcComponentType = this.getEntityStoreRegistry().registerComponent(HubConfigData.class, "HubConfigData", HubConfigData.CODEC);
         PlayerSettingsRegistry.get().registerCodec("HubSettings", HubConfigData.CODEC, hcComponentType);
         LOGGER.atInfo().log("Codex plugin has been loaded!");
     }
